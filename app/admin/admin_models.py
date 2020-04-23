@@ -1,5 +1,5 @@
 from flask import current_app as app
-from .. import db
+from .. import db, ma
 from ..main.main_models import User
 
 class Admin(User):
@@ -8,3 +8,8 @@ class Admin(User):
     admin = db.Column( db.Boolean, index = False, \
                         unique = False, nullable = False
                         )
+
+class AdminSchema(ma.ModelSchema):
+    class Meta:
+       model = Admin
+       fields = ("username", "email", "tel", "bio", "created")

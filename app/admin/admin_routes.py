@@ -1,6 +1,8 @@
 from flask import current_app as app
-from .admin_models import Admin
+from .admin_models import Admin, AdminSchema
 from ..main.main_models import Patient
+
+admin_schema = AdminSchema()
 
 @app.route("/admin")
 def adminIndex():
@@ -8,8 +10,9 @@ def adminIndex():
 
 @app.route("/admin/api/admin")
 def getAdmin():
-    res = Admin.query.all()
-    return { "data": res }
+    all_admins = Admin.query.all()
+    output = admin_schema.dumps(all_admins).data
+    return { "data": output }
 
 @app.route("/admin/api/patient")
 def getPatient():
