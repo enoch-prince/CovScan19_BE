@@ -12,4 +12,4 @@ class Admin(User):
 class AdminSchema(ma.ModelSchema):
     class Meta:
        model = Admin
-       fields = ("username", "email", "tel", "bio", "created")
+       fields = ("id", "username", "email", "tel", "bio", "created")

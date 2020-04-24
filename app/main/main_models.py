@@ -1,5 +1,5 @@
 from flask import current_app as app
-from .. import db
+from .. import db, ma
 
 
 class User(db.Model):
@@ -35,3 +35,9 @@ class Patient(User):
     status = db.Column( db.String( 80 ), index = False, \
                         nullable = False
                         ) # corona free or not
+
+
+class PatientSchema(ma.ModelSchema):
+    class Meta:
+       model = Patient
+       fields = ("id", "username", "email", "tel", "bio", "location", "status", "created")

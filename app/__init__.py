@@ -15,12 +15,12 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
-    ma.init_app(app)
 
     with app.app_context():
         from .admin import admin_routes  # Import Admin routes
         from .main import main_routes # Import main application routes
         
+        ma.init_app(app)
         db.create_all()  # Create database tables for our data models
 
         return app
