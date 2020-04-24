@@ -3,7 +3,7 @@ from flask import current_app as app
 from datetime import datetime as dt
 from .. import db
 from .admin_models import Admin, AdminSchema
-from ..util import find_user, delete_user
+from ..util import find_user
 from ..main.main_models import Patient, PatientSchema
 
 admin_schema = AdminSchema()
@@ -45,16 +45,12 @@ def adminUser():
                             admin=True )
         db.session.add( new_admin )
         db.session.commit()
-        # all_admins = Admin.query.all()
-        # admin_schema.many = True
-        # return admin_schema.dump(all_admins)
         return redirect(url_for("getAllAdmins"))
     
     if request.method == "PUT":
         if isinstance(credentials, tuple):
             # then user exisits
             admin_data, admin_obj  = credentials
-            # admin_obj = Admin.query.filter_by( username=admin_data['username'] ).first()
             for key, value in admin_data.items():
                 setattr(admin_obj, key, value)
             db.session.commit()
@@ -116,11 +112,9 @@ def editPatient():
         if isinstance(credentials, tuple):
             # then user exisits
             patient_data, patient_obj  = credentials
-            # admin_obj = Admin.query.filter_by( username=admin_data['username'] ).first()
             for key, value in patient_data.items():
                 setattr(patient_obj, key, value)
             db.session.commit()
-            # return patient_schema.dumps(admin_obj)
             return redirect( url_for("getPatient", name_or_id=f"{patient_obj.id}") )         
     
     if request.method == "DELETE":

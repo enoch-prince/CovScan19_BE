@@ -19,7 +19,9 @@ def find_user(request, modelClass):
         return credentials
 
     else:
-        return 13 #{"msg": "Please enter at least username and password"} Permission denied
+        return 13 #{"msg": "Please enter at least username and password"}
+
+
 
 def get_user(db, modelClass):
     """Acess User details from database"""
