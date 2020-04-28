@@ -53,17 +53,17 @@ class VitalStatistics(db.Model):
                                     unique = False, nullable = False )
     temp_burst = db.Column( db.TEXT, index = False, \
                             unique = False, nullable = False )
+    record_mode = db.Column( db.String( 25 ), index = False, \
+                             nullable = True
+                            )
     history_id = db.Column( db.Integer, db.ForeignKey( "history.id" ) ) #FK=history is the history table inside the database
 
 
 class History( db.Model ):
     id = db.Column( db.Integer, primary_key = True )
-    timestamp = db.Column( db.DateTime, index = False, \
+    date = db.Column( db.String(25), index = False, \
                             unique = False, nullable = False
                         )
-    record_mode = db.Column( db.String( 25 ), index = False, \
-                             nullable = True
-                            )
     patient_id = db.Column( db.Integer, db.ForeignKey( "covscan19_patients.id" ) )
     vital_stats = db.relationship( "VitalStatistics", backref = db.backref( "history", lazy = "joined" ) ) # backref=history creates a column called history in VitalStatistics table
 
@@ -73,16 +73,18 @@ class History( db.Model ):
 class PatientSchema( ma.ModelSchema ):
     class Meta:
        model = Patient
-       fields = ("id", "name", "dob", "hometown", "country", "created")
+       fields = ("id", "name", "dob", "hometown", "country", "created", "history", "height", "weight")
 
 
 class VitalStatsSchema( ma.ModelSchema ):
     class Meta:
         model = VitalStatistics
-        fields = ("id", "ambient_temp", "ambient_humidity", "dist_of_separation", "temp_burst")
+        fields = ("id", "history_id", "record_mode", "ambient_temp", \
+                  "ambient_humidity", "dist_of_separation", "temp_burst"
+                  )
 
 
 class HistorySchema( ma.ModelSchema ):
     class Meta:
         model = History
-        fields = ("id", "timestamp", "record_mode")
+        fields = ("id", "patient_id", "date", "vital_stats")
