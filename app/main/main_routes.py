@@ -29,8 +29,9 @@ def getPatient(name_or_id):
         patient_schema.many = False
         return patient_schema.dumps(patient)
     
-    patient = Patient.query.filter(name=name_or_id).first_or_404(description=f"{name_or_id} not found")
-    return patient_schema.dumps(patient)
+    patient = Patient.query.filter(Patient.name.contains(name_or_id)).all()
+    patient_schema.many = True
+    return { "msg": f"{name_or_id} not found!"} if len(patient) == 0 else { "data": patient_schema.dump(patient) }
 
 
 @app.route("/api/patient", methods=["POST", "PUT", "DELETE"])
@@ -72,6 +73,11 @@ def editPatient():
         db.session.commit()
         return redirect( url_for("getAllPatients") )
 
+@app.route("/api/vitalstatistics")
+def getAllVitalStats():
+    v_stats = VitalStatistics.query.all()
+    return { "data": vs_schema.dump( v_stats ) }
+
 
 @app.route("/api/patient/<id>/vitalstats")
 def getVitalStats(id):
@@ -102,7 +108,14 @@ def editVitalStats(id):
         return redirect( url_for("getVitalStats", id = id) )
     
     if request.method == "PUT":
-        return { "msg": "Endpoint Not Implemented!" }
+        vs_id = data.get("id")
+        v_stat = find_by_id(vs_id, VitalStatistics)
+        for key, value in data.items():
+            setattr(v_stat, key, value)
+        
+        db.session.commit()
+        
+        return redirect( url_for("getVitalStats", id = id) )
 
 
 
@@ -131,7 +144,8 @@ def patientData():
                                    ambient_humidity = data["ambientHumidity"], \
                                    dist_of_separation = data["distanceOfSeparation"], \
                                    temp_burst = data["temperatureBurst"], \
-                                   record_mode = data["recordMode"], history = history
+                                   record_mode = data["recordMode"], history = history,
+                                   timestamp = dt.now()
                                  )
         db.session.add( v_stats )
         db.session.commit()
@@ -167,5 +181,6 @@ def getPatientHistory(id):
 @app.route("/api/patient/<id>/history/<hid>")
 def getPatientSpecificHistory(id, hid):
     patient = find_by_id( id, Patient )
-    data = [hist for hist in patient.history if hid == hist.id]
+    data = [hist for hist in patient.history if int(hid) == hist.id]
+    print("<---Data--->:", len(data))
     return { "name": patient.name, "id": patient.id, "data": history_schema.dump( data ) }

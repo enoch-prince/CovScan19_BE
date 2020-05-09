@@ -1,0 +1,78 @@
+{% extends "base_dashboard.html" %}
+
+
+{% block page_content %}
+  <!-- Jumbotron Header -->
+  <header class="jumbotron my-4 bg-white justify-content-center">
+    <h6 class="display-4 text-center text-muted">
+      <small>A Warm Welcome {{ name }}!</small>
+    </h6>
+    <p class="lead text-dark">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
+    <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
+  </header>
+
+  <!-- Page Features -->
+  <div class="row text-center">
+
+    <div class="col-sm-6">
+        <div class="card h-80">
+        <div class="card-body">
+            <h4 class="card-title">Recently Monitored</h4>
+            {% if recent | count > 0 %}
+                <table class="table table-hover table-responsive">
+                    <thead class="thead-dark">
+                        <tr>
+                        {% for key in recent[0].keys() %}
+                            <th>{{ key }}</th>     
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent %}
+                        <tr>
+                            {% for value in item.values() %}                 
+                            <td>{{ value }}</td>              
+                            {% endfor %}  
+                        </tr>   
+                        {% endfor %}         
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No patient has been monitored within the last 5 days</p>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <!-- <div class="col-md-auto p-2"> -->
+        <div class="card h-100">
+            <div class="card-body">
+            <h4 class="card-title">Summary</h4>
+            <h5 class="card-subtitle mb-2 text-muted">Total Patients Registered</h5>
+            <p class="card-text">{{ patients }} Patients</p>
+            <h5 class="card-subtitle mb-2 text-muted">Total Vital Stats Recorded</h5>
+            <p class="card-text">{{ vstats }} Records</p>
+            </div>
+            <div class="card-footer">
+            <a href="#" class="btn btn-primary">Find Out More!</a>
+            </div>
+        </div>
+        <!-- </div> -->
+
+        <!-- <div class="col-md-auto p-3">
+        <div class="card h-80">
+            <div class="card-body">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
+            </div>
+            <div class="card-footer">
+            <a href="#" class="btn btn-primary">Find Out More!</a>
+            </div>
+        </div>
+        </div> -->
+
+    </div>
+  </div>
+  <!-- /.row -->
+{% endblock %}

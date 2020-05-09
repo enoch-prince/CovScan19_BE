@@ -1,0 +1,99 @@
+{% extends "base_dashboard.html" %}
+
+{% block page_content %}
+    <div class="container-fluid justify-content-center">
+        {% if msg %}
+            <meta id="server-msg" data-servermsg="{{msg}}">
+        {% endif %}
+        <div class="container text-center bg-light">
+            <div class="row mt-5">
+                <div class="col-sm">
+                    <div class="table-responsive">
+                        <h4 class="text-primary">
+                            List of Registered Admins
+                        </h4>
+                        <table class="table table-hover">
+                            <thead class="thead-dark text-light">
+                                <tr>
+                                {% for key in admins[0].keys() %}
+                                    <th>{{ key }}</th> 
+                                    {% if loop.last %}
+                                    <th></th>
+                                    {% endif %}    
+                                {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for admin in admins %}
+                                <tr>
+                                    {% for value in admin.values() %}                 
+                                        <td>{{ value }}</td>
+                                        {% if loop.last %}
+                                            <td>
+                                                <button type="button" id="edit-{{ admin['id'] }}" class="btn btn-link"><i class="fas fa-pencil-alt"></i></button>
+                                                <button type="button" id="del-{{ admin['id'] }}" class="btn btn-link">
+                                                    <i class="fas fa-user-times"></i>
+                                                </button>
+                                            </td>
+                                        {% endif %}
+                                    {% endfor %}  
+                                    
+                                </tr>   
+                                {% endfor %}         
+                            </tbody>
+                        </table> 
+                    </div>                  
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+  $(document).ready(function () {
+    if( $("#server-msg").length ){
+        var servermsg = $("#server-msg").data("servermsg");
+        $.alert({
+            icon: "fas fa-check-circle",
+            title: "Done!",
+            type: "green",
+            content: servermsg
+        });
+    }
+
+    $("button[id^='del-']").click(function() {
+        var ID = this.id.split('-').pop();
+        data = JSON.stringify({id:ID});
+        $.confirm({
+            icon: 'fa fa-warning',
+            title: 'Delete User?',
+            type: 'orange',
+            typeAnimated: true,
+            content: "Are you sure you want to permanently delete this user?",
+            buttons: {
+                deleteUser: {
+                    text: 'yes',
+                    action: function () {
+                        $.delete($SCRIPT_ROOT + '/admin/api/admin', data, function(result){
+                            $.alert({
+                                icon: "fas fa-check-circle",
+                                title: "Done!",
+                                type: "green",
+                                content: result.msg
+                            });
+                        });
+                    }
+                },
+                close: function () {
+                }
+            }
+        });
+    });
+
+  });
+</script>
+{% endblock %}

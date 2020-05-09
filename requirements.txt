@@ -4,3 +4,8 @@ python-dotenv
 flask-migrate
 flask-marshmallow
 marshmallow-sqlalchemy
+mysqlclient
+flask-login
+flask-WTF
+bootstrap-flask
+email_validator

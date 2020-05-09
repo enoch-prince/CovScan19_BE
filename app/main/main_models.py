@@ -56,8 +56,13 @@ class VitalStatistics(db.Model):
     record_mode = db.Column( db.String( 25 ), index = False, \
                              nullable = True
                             )
+    timestamp = db.Column( db.DateTime, index = False, \
+                             nullable = True
+                            )
     history_id = db.Column( db.Integer, db.ForeignKey( "history.id" ) ) #FK=history is the history table inside the database
 
+    def __repr__(self):
+        return "<VitalStat {}>".format(self.id)
 
 class History( db.Model ):
     id = db.Column( db.Integer, primary_key = True )
@@ -70,21 +75,24 @@ class History( db.Model ):
 
 
 ### Schema Classes ###
-class PatientSchema( ma.ModelSchema ):
+class PatientSchema( ma.SQLAlchemyAutoSchema ):
     class Meta:
        model = Patient
-       fields = ("id", "name", "dob", "hometown", "country", "created", "history", "height", "weight")
+       ordered = True
+       fields = ("id", "name", "dob", "hometown", "country", "created", "height", "weight")
 
 
-class VitalStatsSchema( ma.ModelSchema ):
+class VitalStatsSchema( ma.SQLAlchemyAutoSchema ):
     class Meta:
         model = VitalStatistics
+        ordered = True
         fields = ("id", "history_id", "record_mode", "ambient_temp", \
-                  "ambient_humidity", "dist_of_separation", "temp_burst"
+                  "ambient_humidity", "dist_of_separation", "temp_burst", "timestamp"
                   )
 
 
-class HistorySchema( ma.ModelSchema ):
+class HistorySchema( ma.SQLAlchemyAutoSchema ):
     class Meta:
         model = History
-        fields = ("id", "patient_id", "date", "vital_stats")
+        ordered = True
+        fields = ("id", "patient_id", "date")

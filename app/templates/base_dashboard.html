@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% from 'bootstrap/nav.html' import render_nav_item %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='dashboard.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3 class="text-center">COVScan19</h3>
+            <h3 class="text-center text-muted">Monitor</h3>
+        </div>
+        <ul class="list-unstyled components">
+            <p>Admin Panel</p>
+            <li class="active">
+                <a href="#patientSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Patients</a>
+                <ul class="collapse list-unstyled" id="patientSubmenu">
+                    <li>
+                        <a href="#">View Patient Info</a>
+                    </li>
+                    <li>
+                        <a href="#">Create New Patient</a>
+                    </li>
+                    <li>
+                        <a href="#">View All History</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li>
+                <a href="#">Register New Admin</a>
+            </li> -->
+            <li>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Manage Admins</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li>
+                        <a href="{{ url_for('signup') }}">Register New Admin</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('getAllAdmins') }}">View All Admins</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li>
+                <a href="#">Portfolio</a>
+            </li>
+            <li>
+                <a href="#">Contact</a>
+            </li> -->
+        </ul>
+    </nav>
+
+
+    <!-- Page Content -->
+
+    <div id="content"> 
+        <!-- navbar -->
+        <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <button type="button" id="sidebarCollapse" class="btn btn-info">
+            <i class="fas fa-align-left"></i>
+        </button>
+        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-align-justify"></i>
+        </button>
+        <!-- <div class="collapse navbar-collapse" id="navbarNav"> -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item active">
+                {{ render_nav_item('dashboard', 'Dashboard') }}
+            </li>
+            <li class="nav-item">
+                {{ render_nav_item('logout', 'Log Out') }}
+            </li>
+            </ul>
+        </div>
+        </nav>
+        <!-- /navbar -->
+
+        {% block page_content %}
+
+        {% endblock %}
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.wrapper -->
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    // extend jQuery to use put and delete requests //
+    jQuery.each( [ "put", "delete" ], function( i, method ) {
+        jQuery[ method ] = function( url, data, callback, type ) {
+            if ( jQuery.isFunction( data ) ) {
+                type = type || callback;
+                callback = data;
+                data = undefined;
+            }
+
+            return jQuery.ajax({
+                url: url,
+                contentType: "application/json",
+                type: method,
+                dataType: type,
+                data: data,
+                success: callback
+            });
+        };
+    });
+
+  $(document).ready(function () {
+
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
+
+  });
+</script>
+{% endblock %}

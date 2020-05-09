@@ -17,10 +17,10 @@ pip install -r requirements.txt
 
 ```
 
-### List of Api's
+### List of Api Endpoints
 * **/api/patients** - A GET request that retrieves all registered patients from the database.
 * **/api/patient/<name_or_id>** - A GET request that retrieves a specific patient's details either by name or id.
-* **/api/patient** - A GET, PUT or DELETE request with request body being json:
+* **/api/patient** - A POST, PUT or DELETE request with request body being json:
      > ```python
      >           { 
      >              "name": "Davi Elikplim",
@@ -31,6 +31,9 @@ pip install -r requirements.txt
      >              "weight": 66.7
      >            }
      > ```
+
+    *PUT* and *DELETE* requests only require the ID of the Patient in the request body
+
 * **/api/patient/<id>/vitalstats** - A GET request that retrieves the vital statistics data of a patient specified by an id.
 * **/api/patient/<id>/vitalstats** - A DELETE request of a patient's specific vital stats specified by an id by json.
     > An example:
@@ -41,7 +44,7 @@ pip install -r requirements.txt
     >
     > This implies a request to delete the vitalstats of ID 5 of Patient with ID 2
 * **/api/patient_data** - A POST or DELETE request:
-    **POST request** - creates the vital statistics data of patient (using the id) as well as a history of all created data. The request body will be:
+    **POST request** - creates the vital statistics data of patient (using the pateint's id)as well as a history of all created data. The request body will be:
     
     > ```python
     >           { 

@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
+from flask_login import LoginManager
+from flask_bootstrap import Bootstrap
 from config import appEnvironment, DevConfig
 
 appConfig = None
@@ -14,6 +16,8 @@ else:
 db = SQLAlchemy()
 migrate = Migrate()
 ma = Marshmallow()
+login_manager = LoginManager()
+bootstrap = Bootstrap()
 
 def create_app():
     """Construct the core application."""
@@ -22,6 +26,8 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+    login_manager.init_app(app)
+    bootstrap.init_app(app)
 
     with app.app_context():
         from .admin import admin_routes  # Import Admin routes
